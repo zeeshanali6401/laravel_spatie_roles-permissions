@@ -10,17 +10,23 @@ class SuperUser extends Component
 {
     public function render()
     {
-        $roleCollection = Role::all();
-
         $role = Role::findByName('admin');
-        $permissions = $role->permissions;
+        $permissions = $role->permissions->pluck('name');
 
         return view('livewire.super-user', [
-            'roleCollection' => $roleCollection,
+            'role' => $role,
             'permissions' => $permissions,
         ]);
     }
-    public function revoke($id){
-        dd($id);
+    public function togglePermission($string)
+    {
+        $role = Role::where('name', 'admin')->first();
+        if ($role) {
+            if ($role->hasPermissionTo($string)) {
+                $role->revokePermissionTo($string); // Remove permission if already granted
+            } else {
+                $role->givePermissionTo($string); // Grant permission if not already granted
+            }
+        }
     }
 }

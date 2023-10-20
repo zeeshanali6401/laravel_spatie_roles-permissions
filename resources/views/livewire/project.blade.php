@@ -1,10 +1,18 @@
 <div>
+
     <div class="container">
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#projectModal">
-            Add
-        </button>
+        @can('add')
+            {{-- Assuming 'add' is the ability and 'admin' is the resource --}}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#projectModal">
+                Add
+            </button>
+        @else
+            <button class="btn btn-danger p-0" disabled>Sorry you haven't permission</button>
+        @endcan
+
         <div class="table-responsive mt-3">
+            @can('show')
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -21,13 +29,22 @@
                             <td>{{ $item->title }}</td>
                             <td>{{ $item->description }}</td>
                             <td class="text-center">
-                                <button class="btn btn-primary btn-sm" wire:click="edit({{ $item->id }})">Edit</button>
-                                <button class="btn btn-danger btn-sm" wire:click="delete({{ $item->id }})">Delete</button>
+                                @can('update')
+                                    <button class="btn btn-primary btn-sm"
+                                        wire:click="edit({{ $item->id }})">Edit</button>
+                                @endcan
+                                @can('delete')
+                                    <button class="btn btn-danger btn-sm"
+                                        wire:click="delete({{ $item->id }})">Delete</button>
+                                @endcan
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+            @else
+                <strong><h3 class="text-center text-danger">You dont have any permission!</h3></strong>
+            @endcan
         </div>
 
         <!-- Modal -->
