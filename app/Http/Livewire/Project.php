@@ -11,16 +11,17 @@ class Project extends Component
     public function render()
     {
         $collection = Projects::all();
-
         return view('livewire.project', [
             'collection' => $collection
         ]);
     }
-    public function resetData(){
+    public function resetData()
+    {
         $this->title = null;
         $this->description = null;
     }
-    public function store(){
+    public function store()
+    {
         $project = new Projects;
         $project->title = $this->title;
         $project->description = $this->description;
@@ -29,13 +30,20 @@ class Project extends Component
         $this->render();
         $this->resetData();
     }
-    public function edit($id){
+    public function edit($id)
+    {
         dd($id);
     }
-    public function delete($id){
+    public function delete($id)
+    {
         $data = Projects::find($id);
-        if(!is_null($id)){
-            $data->delete();
+
+        if (!is_null($id)) {
+            if (auth()->user()->hasPermissionTo('delete')) {
+                $data->delete();
+            }
+        } else {
+            return "Error";
         }
         $this->render();
     }
