@@ -8,7 +8,6 @@ use Spatie\Permission\Models\Permission;
 
 class SuperUser extends Component
 {
-
     public function render()
     {
         $roleCollection = Role::all();
@@ -16,18 +15,12 @@ class SuperUser extends Component
         $role = Role::findByName('admin');
         $permissions = $role->permissions;
 
-        $permissionNames = $permissions->map(function ($permission) {
-            return $permission->name;
-        });
-
         return view('livewire.super-user', [
             'roleCollection' => $roleCollection,
-            'permissions' => $permissionNames,
+            'permissions' => $permissions,
         ]);
     }
-    public function togglePermission($id)
-    {
-        $role = Role::get();
-        $role->revokePermissionTo('delete');
+    public function revoke($id){
+        dd($id);
     }
 }
