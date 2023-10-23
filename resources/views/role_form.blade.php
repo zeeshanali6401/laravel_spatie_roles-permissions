@@ -23,5 +23,7 @@
       </div><br>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    <br>
+    <a href="/permission">Permission</a>
 </div>
 @endsection

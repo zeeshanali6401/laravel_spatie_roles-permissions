@@ -13,5 +13,7 @@
       </div><br>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    <br>
+    <a href="/role">Role</a>
 </div>
 @endsection
