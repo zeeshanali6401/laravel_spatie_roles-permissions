@@ -51,7 +51,7 @@
                 </strong>
             @endcan
         </div>
-        <!-- Modal Body -->
+        <!--Create Uer Modal Body -->
         <div wire:ignore.self class="modal fade" id="CreateUserModal" tabindex="-1" data-bs-backdrop="static"
             data-bs-keyboard="false" role="dialog" aria-labelledby="CreateUserModal" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -90,22 +90,38 @@
                                 <label for="role" class="col-md-4 col-form-label text-left">Select Role</label>
                                 <div class="col-md-6">
                                     <select class="form-select" wire:model="role">
+                                        <option value="#" selected @readonly(true)>Select</option>
                                         @foreach ($roleCollection as $item)
                                             <option value="{{ $item->name }}">{{ $item->name }}</option>
+                                            <h2>{{ $item->name }}</h2>
                                         @endforeach
                                     </select>
+                                    @if (!is_null($permissions))
+
+                                        @foreach ($permissions as $permission)
+                                            <div class="list-group">
+                                                <label class="list-group-item">
+                                                    <input class="form-check-input me-1" wire:model="perms.{{ $permission->id }}" type="checkbox"
+                                                        value="{{ $permission->id }}">
+                                                    {{ $permission->name }}
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    @endif
                                 </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Create</button>
+                                {{-- <button wire:click="userPermissions" class="btn btn-secondary">checker</button> --}}
+
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Modal -->
+        <!--Create Project Modal -->
         <div wire:ignore.self class="modal fade" class="modal fade" id="projectModal" data-bs-backdrop="static"
             data-bs-keyboard="false" tabindex="-1" aria-labelledby="projectModalLabel" aria-hidden="true">
             <div class="modal-dialog">

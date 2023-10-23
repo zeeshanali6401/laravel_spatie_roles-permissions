@@ -5,7 +5,7 @@
     @csrf
       <div class="form-group">
         <label>Permission Name</label>
-        <input type="text" class="form-control" name="name" placeholder="Permission Name">
+        <input type="text" class="form-control" name="name" placeholder="Permission Name" autofocus>
       </div>
       <div class="form-group">
         <label>guard_name</label>

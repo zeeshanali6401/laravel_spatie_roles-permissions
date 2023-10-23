@@ -16,18 +16,26 @@ class Project extends Component
         'password' => 'required|min:8',
         'role' => 'required',
     ];
-    public $name, $email, $password, $role;
+    public $name, $email, $password, $role, $perms = [];
     public $title, $description;
     public function render()
     {
+        if(!is_null($this->role)){
+            $permissions = Role::where('name', $this->role)->first()->getAllPermissions();
+        }else{
+            $permissions = null;
+        }
+
         $collection = Projects::all();
         $roleCollection = Role::all();
         return view('livewire.project', [
             'collection' => $collection,
             'roleCollection' => $roleCollection,
+            'permissions' => $permissions,
         ]);
     }
-    public function resetData(){
+    public function resetData()
+    {
         $this->title = null;
         $this->description = null;
         $this->name = null;
@@ -62,15 +70,20 @@ class Project extends Component
         }
         $this->render();
     }
-    public function createUser(){
+    public function createUser()
+    {
         $user = new User;
         $user->name = $this->name;
         $user->email = $this->email;
         $user->role = $this->role;
-        $user->password = Hash::make($this->email);
+        $user->password = Hash::make($this->password);
         $user->save();
-        $user->assignRole($this->role);
+        // $user->assignRole($this->role);
+        $user->givePermissionTo($this->perms);
         $this->resetData();
         $this->dispatchBrowserEvent('hideModal');
+    }
+    public function userPermissions(){
+        dd($this->perms);
     }
 }
