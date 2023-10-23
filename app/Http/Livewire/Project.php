@@ -20,18 +20,23 @@ class Project extends Component
     public $title, $description;
     public function render()
     {
-        if(!is_null($this->role)){
+        if (!is_null($this->role)) {
             $permissions = Role::where('name', $this->role)->first()->getAllPermissions();
-        }else{
+        } else {
             $permissions = null;
         }
-
-        $collection = Projects::all();
+        if (auth()->user()->role == 'admin') {
+            $collection = Projects::all();
+        } else {
+            $collection = Projects::where('user_id', auth()->user()->id)->get();
+        }
+        $userCollection = User::where('role', '!=', 'admin')->get();
         $roleCollection = Role::all();
         return view('livewire.project', [
             'collection' => $collection,
             'roleCollection' => $roleCollection,
             'permissions' => $permissions,
+            'userCollection' => $userCollection,
         ]);
     }
     public function resetData()
@@ -48,6 +53,7 @@ class Project extends Component
         $project = new Projects;
         $project->title = $this->title;
         $project->description = $this->description;
+        $project->user_id = auth()->user()->id;
         $project->save();
         $this->dispatchBrowserEvent('hideModal');
         $this->render();
@@ -83,7 +89,8 @@ class Project extends Component
         $this->resetData();
         $this->dispatchBrowserEvent('hideModal');
     }
-    public function userPermissions(){
+    public function userPermissions()
+    {
         dd($this->perms);
     }
 }

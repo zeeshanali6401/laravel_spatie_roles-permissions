@@ -1,9 +1,11 @@
 <div>
     <div class="container">
         <!-- Modal trigger button -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#CreateUserModal">
-            Create User
-        </button>
+        @if (auth()->user()->role == 'admin')
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#CreateUserModal">
+                Create User
+            </button>
+        @endif
         <!-- Button trigger modal -->
         @can('add')
             {{-- Assuming 'add' is the ability and 'admin' is the resource --}}
@@ -13,8 +15,9 @@
         @else
             <button class="btn btn-danger p-0" disabled>Sorry you haven't permission</button>
         @endcan
-
+        {{-- Projects Table --}}
         <div class="table-responsive mt-3">
+            <h3 class="text-center text-secondary">Projects List</h3>
             @can('show')
                 <table class="table table-bordered">
                     <thead>
@@ -51,6 +54,40 @@
                 </strong>
             @endcan
         </div>
+        {{-- User Table --}}
+        @if (auth()->user()->role == 'admin')
+            <h3 class="text-center text-warning">Users List</h3>
+            <div class="table-responsive">
+                <table class="table table-secondary">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Permissions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($userCollection as $user)
+                            <tr>
+                                <td>{{ $user->id }}</td>
+                                <td>{{ $user->name }}</td>
+                                <td>{{ $user->role }}</td>
+                                <td>
+                                    @if ($user->getAllPermissions()->isNotEmpty())
+                                            @foreach ($user->getPermissionNames() as $permission)
+                                                <span class="text-uppercase fw-bolder">{{ $permission }},</span>
+                                            @endforeach
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+
+                    </tbody>
+                </table>
+            </div>
+        @endif
+
         <!--Create Uer Modal Body -->
         <div wire:ignore.self class="modal fade" id="CreateUserModal" tabindex="-1" data-bs-backdrop="static"
             data-bs-keyboard="false" role="dialog" aria-labelledby="CreateUserModal" aria-hidden="true">
@@ -101,7 +138,8 @@
                                         @foreach ($permissions as $permission)
                                             <div class="list-group">
                                                 <label class="list-group-item">
-                                                    <input class="form-check-input me-1" wire:model="perms.{{ $permission->id }}" type="checkbox"
+                                                    <input class="form-check-input me-1"
+                                                        wire:model="perms.{{ $permission->id }}" type="checkbox"
                                                         value="{{ $permission->id }}">
                                                     {{ $permission->name }}
                                                 </label>
@@ -128,7 +166,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="projectModalLabel">Add Project</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form wire:submit.prevent="store">
