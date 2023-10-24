@@ -10,14 +10,15 @@ use App\Models\Project as Projects;
 
 class Project extends Component
 {
+    public $user, $name, $email, $password, $role, $perms = [];
+    public $editPermission = [];
+    public $title, $description;
     public $rules = [
         'name' => 'required',
         'email' => 'required|email',
         'password' => 'required|min:8',
         'role' => 'required',
     ];
-    public $name, $email, $password, $role, $perms = [];
-    public $title, $description;
     public function render()
     {
         if (!is_null($this->role)) {
@@ -59,9 +60,18 @@ class Project extends Component
         $this->render();
         $this->resetData();
     }
-    public function edit($id)
+    public function edit($data)
     {
-        dd($id);
+        $this->dispatchBrowserEvent('edit_modal');
+        $user = User::find($data);
+        $this->name = $user['name'];
+        $this->email = $user['email'];
+        $this->password = $user['password'];
+        $this->editPermission = $user->getAllPermissions();
+
+    }
+    public function update(){
+
     }
     public function delete($id)
     {
@@ -88,9 +98,5 @@ class Project extends Component
         $user->givePermissionTo($this->perms);
         $this->resetData();
         $this->dispatchBrowserEvent('hideModal');
-    }
-    public function userPermissions()
-    {
-        dd($this->perms);
     }
 }

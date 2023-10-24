@@ -75,10 +75,12 @@
                                 <td>{{ $user->role }}</td>
                                 <td>
                                     @if ($user->getAllPermissions()->isNotEmpty())
-                                            @foreach ($user->getPermissionNames() as $permission)
-                                                <span class="text-uppercase fw-bolder">{{ $permission }},</span>
-                                            @endforeach
+                                        @foreach ($user->getPermissionNames() as $permission)
+                                            <span class="text-uppercase fw-bolder">{{ $permission }},</span>
+                                        @endforeach
                                     @endif
+                                    <button wire:click="edit({{ $user->id }})"
+                                        class="btn btn-primary btn-sm p-0">Change</button>
                                 </td>
                             </tr>
                         @endforeach
@@ -127,18 +129,19 @@
                                 <label for="role" class="col-md-4 col-form-label text-left">Select Role</label>
                                 <div class="col-md-6">
                                     <select class="form-select" wire:model="role">
-                                        <option value="#" selected @readonly(true)>Select</option>
+                                        <option wire:model="role" selected @readonly(true)>Select</option>
                                         @foreach ($roleCollection as $item)
                                             <option value="{{ $item->name }}">{{ $item->name }}</option>
                                             <h2>{{ $item->name }}</h2>
                                         @endforeach
                                     </select>
+
                                     @if (!is_null($permissions))
 
                                         @foreach ($permissions as $permission)
                                             <div class="list-group">
                                                 <label class="list-group-item">
-                                                    <input class="form-check-input me-1"
+                                                    <input class="form-check-input me-1" @checked(true)
                                                         wire:model="perms.{{ $permission->id }}" type="checkbox"
                                                         value="{{ $permission->id }}">
                                                     {{ $permission->name }}
@@ -150,6 +153,84 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Create</button>
+                                {{-- <button wire:click="userPermissions" class="btn btn-secondary">checker</button> --}}
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Permission update Modal Body -->
+        <div wire:ignore.self class="modal fade" id="editPermissionModal" tabindex="-1" data-bs-backdrop="static"
+            data-bs-keyboard="false" role="dialog" aria-labelledby="editPermissionModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editPermissionModal">Update User</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form wire:submit.prevent="createUser">
+                            <div class="row mb-3">
+                                <label for="name" class="col-md-4 col-form-label text-left">Name</label>
+
+                                <div class="col-md-6">
+                                    <input id="name" type="text" class="form-control" wire:model="name"
+                                        autofocus>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="email" class="col-md-4 col-form-label text-left">Email Address</label>
+
+                                <div class="col-md-6">
+                                    <input id="email" type="email" class="form-control" wire:model="email"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="password" class="col-md-4 col-form-label text-left">Password</label>
+                                <div class="col-md-6">
+                                    <input id="password" type="password" class="form-control" wire:model="password"
+                                        required>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                @if ($editPermission)
+                                    <div class="w-75 list-group">
+                                        <label class="list-group-item">
+                                            <input @if ($editPermission->contains('add')) checked @endif
+                                                wire:click="togglePermission('add')" class="form-check-input me-1"
+                                                type="checkbox">
+                                            Create Permission
+                                        </label>
+                                        <label class="list-group-item">
+                                            <input @if ($editPermission->contains('show')) checked @endif
+                                                wire:click="togglePermission('show')" class="form-check-input me-1"
+                                                type="checkbox">
+                                            Read Permission
+                                        </label>
+                                        <label class="list-group-item">
+                                            <input @if ($editPermission->contains('update')) checked @endif
+                                                wire:click="togglePermission('update')" class="form-check-input me-1"
+                                                type="checkbox">
+                                            Update Permission
+                                        </label>
+                                        <label class="list-group-item">
+                                            <input @if ($editPermission->contains('delete')) checked @endif
+                                                wire:click="togglePermission('delete')" class="form-check-input me-1"
+                                                type="checkbox">
+                                            Delete Permission
+                                        </label>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Create</button>
                                 {{-- <button wire:click="userPermissions" class="btn btn-secondary">checker</button> --}}
 
@@ -197,5 +278,8 @@
     window.addEventListener('hideModal', event => {
         $("#CreateUserModal").modal("hide");
         $("#projectModal").modal("hide");
+    })
+    window.addEventListener('edit_modal', event => {
+        $("#editPermissionModal").modal("show");
     })
 </script>
