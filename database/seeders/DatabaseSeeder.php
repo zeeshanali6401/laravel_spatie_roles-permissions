@@ -16,20 +16,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
 {
-    Permission::create(['name' => 'add']);
-    Permission::create(['name' => 'update']);
-    Permission::create(['name' => 'show']);
-    Permission::create(['name' => 'delete']);
+    // Permission::create(['name' => 'add']);
+    // Permission::create(['name' => 'update']);
+    // Permission::create(['name' => 'show']);
+    // Permission::create(['name' => 'delete']);
 
-    $role = Role::create(['name' => 'admin']);
-    $role->givePermissionTo(['add', 'show', 'update', 'delete']);
+    // $role = Role::create(['name' => 'superAdmin']);
+    // $role->givePermissionTo(['add', 'show', 'update', 'delete']);
 
     \App\Models\User::factory()->create([
         'name' => 'Super Admin',
-        'email' => 'admin@admin.com',
+        'email' => 'superAdmin@admin.com',
         'password' => '$2y$10$qCsQvAhKdYgTBIFOXDuLfeh42w11g/EgASMOuOB74Fr8gaVhfJC0i',  // password
-        // 'type'  =>  'admin',
-    ])->assignRole('admin');
+        'role'  =>  2,
+    ]);
 }
 
 }

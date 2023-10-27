@@ -25,10 +25,7 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/role', [RoleController::class, 'index']);
-Route::post('/role', [RoleController::class,'store'])->name('role.store');
-Route::view('/permission', 'permissions_form');
-Route::post('/permission', [PermissionController::class,'store'])->name('permission.store');
+
 
 
 
@@ -46,7 +43,12 @@ Route::middleware(['auth', 'user-access:admin'])->group(function () {
 });
 
 
-Route::middleware(['auth', 'user-access:manager'])->group(function () {
+Route::middleware(['auth', 'user-access:superAdmin'])->group(function () {
 
-    Route::get('/manager/home', [HomeController::class, 'managerHome'])->name('manager.home');
+    // Route::get('/superAdmin/home', [HomeController::class, 'superAdmin'])->name('superAdmin.home');
+    Route::view('superAdmin/home', 'SuperAdmin');
+    Route::get('/role', [RoleController::class, 'index']);
+    Route::post('/role', [RoleController::class, 'store'])->name('role.store');
+    Route::view('/permission', 'permissions_form');
+    Route::post('/permission', [PermissionController::class, 'store'])->name('permission.store');
 });

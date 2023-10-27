@@ -21,7 +21,7 @@ class HomeController extends Controller
         return view('adminHome');
     }
 
-    public function managerHome()
+    public function superAdmin()
     {
         return view('managerHome');
     }
