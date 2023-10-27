@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
         'name' => 'Super Admin',
         'email' => 'admin@admin.com',
         'password' => '$2y$10$qCsQvAhKdYgTBIFOXDuLfeh42w11g/EgASMOuOB74Fr8gaVhfJC0i',  // password
-        'role'  =>  'admin',
+        // 'type'  =>  'admin',
     ])->assignRole('admin');
 }
 

@@ -63,8 +63,10 @@
                         <tr>
                             <th scope="col">ID</th>
                             <th scope="col">Name</th>
+                            <th scope="col">Email</th>
                             <th scope="col">Role</th>
                             <th scope="col">Permissions</th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -72,6 +74,7 @@
                             <tr>
                                 <td>{{ $user->id }}</td>
                                 <td>{{ $user->name }}</td>
+                                <td>{{ $user->email }}</td>
                                 <td>{{ $user->role }}</td>
                                 <td>
                                     @if ($user->getAllPermissions()->isNotEmpty())
@@ -79,12 +82,14 @@
                                             <span class="text-uppercase fw-bolder">{{ $permission }},</span>
                                         @endforeach
                                     @endif
+
+                                </td>
+                                <td>
                                     <button wire:click="edit({{ $user->id }})"
-                                        class="btn btn-primary btn-sm p-0">Change</button>
+                                        class="btn btn-primary btn-sm p-0">Update</button>
                                 </td>
                             </tr>
                         @endforeach
-
                     </tbody>
                 </table>
             </div>
@@ -163,17 +168,15 @@
             </div>
         </div>
         <!--Permission update Modal Body -->
-        <div wire:ignore.self class="modal fade" id="editPermissionModal" tabindex="-1" data-bs-backdrop="static"
-            data-bs-keyboard="false" role="dialog" aria-labelledby="editPermissionModal" aria-hidden="true">
+        <div wire:ignore.self class="modal fade" id="updateModal" tabindex="-1" data-bs-backdrop="static"
+            data-bs-keyboard="false" role="dialog" aria-labelledby="updateModal" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editPermissionModal">Update User</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+                        <h5 class="modal-title" id="updateModal">Update User</h5>
                     </div>
                     <div class="modal-body">
-                        <form wire:submit.prevent="createUser">
+                        <form wire:submit.prevent="update">
                             <div class="row mb-3">
                                 <label for="name" class="col-md-4 col-form-label text-left">Name</label>
 
@@ -202,25 +205,25 @@
                                 @if ($editPermission)
                                     <div class="w-75 list-group">
                                         <label class="list-group-item">
-                                            <input @if ($editPermission->contains('add')) checked @endif
+                                            <input @if ($editPermission->contains('name', 'add')) checked @endif
                                                 wire:click="togglePermission('add')" class="form-check-input me-1"
                                                 type="checkbox">
                                             Create Permission
                                         </label>
                                         <label class="list-group-item">
-                                            <input @if ($editPermission->contains('show')) checked @endif
+                                            <input @if ($editPermission->contains('name', 'show')) checked @endif
                                                 wire:click="togglePermission('show')" class="form-check-input me-1"
                                                 type="checkbox">
                                             Read Permission
                                         </label>
                                         <label class="list-group-item">
-                                            <input @if ($editPermission->contains('update')) checked @endif
+                                            <input @if ($editPermission->contains('name', 'update')) checked @endif
                                                 wire:click="togglePermission('update')" class="form-check-input me-1"
                                                 type="checkbox">
                                             Update Permission
                                         </label>
                                         <label class="list-group-item">
-                                            <input @if ($editPermission->contains('delete')) checked @endif
+                                            <input @if ($editPermission->contains('name', 'delete')) checked @endif
                                                 wire:click="togglePermission('delete')" class="form-check-input me-1"
                                                 type="checkbox">
                                             Delete Permission
@@ -229,9 +232,7 @@
                                 @endif
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"
-                                    data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Create</button>
+                                <button type="submit" class="btn btn-primary">Update</button>
                                 {{-- <button wire:click="userPermissions" class="btn btn-secondary">checker</button> --}}
 
                             </div>
@@ -278,8 +279,9 @@
     window.addEventListener('hideModal', event => {
         $("#CreateUserModal").modal("hide");
         $("#projectModal").modal("hide");
+        $("#updateModal").modal("hide");
     })
     window.addEventListener('edit_modal', event => {
-        $("#editPermissionModal").modal("show");
+        $("#updateModal").modal("show");
     })
 </script>

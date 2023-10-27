@@ -10,7 +10,7 @@ use App\Models\Project as Projects;
 
 class Project extends Component
 {
-    public $user, $name, $email, $password, $role, $perms = [];
+    public $user, $name, $email, $password, $role, $perms = [], $user_id;
     public $editPermission = [];
     public $title, $description;
     public $rules = [
@@ -31,7 +31,7 @@ class Project extends Component
         } else {
             $collection = Projects::where('user_id', auth()->user()->id)->get();
         }
-        $userCollection = User::where('role', '!=', 'admin')->get();
+        $userCollection = User::where('role', 0)->get();
         $roleCollection = Role::all();
         return view('livewire.project', [
             'collection' => $collection,
@@ -60,19 +60,6 @@ class Project extends Component
         $this->render();
         $this->resetData();
     }
-    public function edit($data)
-    {
-        $this->dispatchBrowserEvent('edit_modal');
-        $user = User::find($data);
-        $this->name = $user['name'];
-        $this->email = $user['email'];
-        $this->password = $user['password'];
-        $this->editPermission = $user->getAllPermissions();
-
-    }
-    public function update(){
-
-    }
     public function delete($id)
     {
         $data = Projects::find($id);
@@ -91,12 +78,48 @@ class Project extends Component
         $user = new User;
         $user->name = $this->name;
         $user->email = $this->email;
-        $user->role = $this->role;
+        $user->role = 0;
         $user->password = Hash::make($this->password);
         $user->save();
         // $user->assignRole($this->role);
         $user->givePermissionTo($this->perms);
         $this->resetData();
         $this->dispatchBrowserEvent('hideModal');
+    }
+
+    public function edit($data)
+    {
+        $this->dispatchBrowserEvent('edit_modal');
+        $user = User::find($data);
+        $this->name = $user['name'];
+        $this->email = $user['email'];
+        $this->password = $user['password'];
+        $this->editPermission = $user->getAllPermissions();
+        $this->user_id = $data;
+
+    }
+    public function update(){
+        $user = User::find($this->user_id);
+        $user->name = $this->name;
+        $user->email = $this->email;
+        // $user->role = $this->role;
+        $user->password = Hash::make($this->password);
+        $user->update();
+        // $user->assignRole($this->role);
+        $user->givePermissionTo($this->perms);
+        $this->resetData();
+        $this->dispatchBrowserEvent('hideModal');
+    }
+    public function togglePermission($string){
+        $user = User::find($this->user_id);
+        // dd($user);
+        if ($user) {
+            if ($user->hasPermissionTo($string)) {
+                $user->revokePermissionTo($string);
+            } else {
+                $user->givePermissionTo($string);
+            }
+        }
+        $this->render();
     }
 }
