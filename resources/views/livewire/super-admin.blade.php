@@ -2,58 +2,83 @@
     <div class="container justify-content-center">
         <!-- Modal trigger button -->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPermissionsModal">
-          Add Permissions
+            Add Permissions
         </button>
-
-
 
         <!-- Modal trigger button -->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRoleModal">
             Add Role
         </button>
 
+        <!--Add Admin Modal trigger button -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAdminModal">
+            Add Admin
+        </button>
 
+        {{-- Roles Table --}}
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="table-light">
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    @foreach ($roles as $role)
+                        <tr>
+                            <td>{{ $role->id }}</td>
+                            <td>{{ $role->name }}</td>
+                            <td></td>
+                        </tr>
+                    @endforeach
+                </tbody>
+                <tfoot>
+
+                </tfoot>
+            </table>
+        </div>
 
         <!--Add Permissions Modal Body -->
-        <div  wire:ignore.self  class="modal fade" id="addPermissionsModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+        <div wire:ignore.self class="modal fade" id="addPermissionsModal" tabindex="-1" data-bs-backdrop="static"
+            data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
             <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalTitleId">Add Permissions:</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form wire:submit.prevent="addPermissions">
-                              <div class="form-group">
+                            <div class="form-group">
                                 <label>Permission Name</label>
-                                <input type="text" class="form-control" wire:model="permName" placeholder="Permission Name" autofocus>
-                              </div>
-                              <div class="form-group">
+                                <input type="text" class="form-control" wire:model="permName"
+                                    placeholder="Permission Name" autofocus>
+                            </div>
+                            <div class="form-group">
                                 <label>guard_name</label>
-                                <input value="web" readonly type="text" class="form-control" wire:model="permGuard" placeholder="guard_name">
-                              </div><br>
-                              <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                  <button type="submit" class="btn btn-primary">Save</button>
-                              </div>
-                            </form>
+                                <input value="web" readonly type="text" class="form-control"
+                                    wire:model="permGuard" placeholder="guard_name">
+                            </div><br>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!--Add Admin Modal trigger button -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAdminModal">
-          Add Admin
-        </button>
-
         <!--Add Admin Modal Body -->
-        <div wire:ignore.self class="modal fade" id="addAdminModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+        <div wire:ignore.self class="modal fade" id="addAdminModal" tabindex="-1" data-bs-backdrop="static"
+            data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
             <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalTitleId">Add Admin</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form wire:submit.prevent="createUser">
@@ -89,7 +114,8 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Create</button>
                                 {{-- <button wire:click="userPermissions" class="btn btn-secondary">checker</button> --}}
 
@@ -100,13 +126,6 @@
             </div>
         </div>
 
-
-        <!-- Optional: Place to the bottom of scripts -->
-        <script>
-            const myModal = new bootstrap.Modal(document.getElementById('addAdminModal'), options)
-
-        </script>
-
         <!--Add Role Modal Body -->
         <div wire:ignore.self class="modal fade" id="addRoleModal" tabindex="-1" data-bs-backdrop="static"
             data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
@@ -114,14 +133,15 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalTitleId">Add Role:</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form wire:submit.prevent="addRole">
                             <div class="form-group">
                                 <label>Role Name</label>
-                                <input type="text" class="form-control" wire:model="roleName" placeholder="Role Name"
-                                    autofocus>
+                                <input type="text" class="form-control" wire:model="roleName"
+                                    placeholder="Role Name" autofocus>
                             </div>
                             <div class="form-group">
                                 <div class="form-group">
@@ -141,7 +161,8 @@
                                     placeholder="guard_name">
                             </div><br>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Save</button>
                             </div>
                         </form>
@@ -152,6 +173,7 @@
 
     </div>
 </div>
+
 <script>
     window.addEventListener('hideModal', event => {
         $("#addPermissionsModal").modal("hide");
