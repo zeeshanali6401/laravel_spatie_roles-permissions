@@ -48,7 +48,7 @@
         </button>
 
         <!--Add Admin Modal Body -->
-        <div class="modal fade" id="addAdminModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+        <div wire:ignore.self class="modal fade" id="addAdminModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
             <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -78,6 +78,14 @@
                                 <div class="col-md-6">
                                     <input id="password" type="password" class="form-control" wire:model="password"
                                         required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="" class="form-label">Role</label>
+                                    <select class="form-select form-select-lg" wire:model="role">
+                                        @foreach ($roles as $role)
+                                            <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="modal-footer">

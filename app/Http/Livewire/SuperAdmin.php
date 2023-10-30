@@ -5,19 +5,23 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class SuperAdmin extends Component
 {
 
-    public $permName, $permGuard = 'web';
+    public $permName, $permGuard = 'web', $role;
     public $roleName, $rolePermission = [];
+    public $name, $email, $password;
 
     public function render()
     {
-
+        $roles = Role::all();
         $permissions = Permission::all();
         return view('livewire.super-admin', [
             'permissions' => $permissions,
+            'roles' => $roles,
         ]);
     }
     public function addPermissions()
@@ -33,6 +37,9 @@ class SuperAdmin extends Component
     {
         $this->permName = null;
         $this->permGuard = null;
+        $this->name = null;
+        $this->email = null;
+        $this->password = null;
     }
     public function addRole()
     {
@@ -52,5 +59,16 @@ class SuperAdmin extends Component
                 $role->givePermissionTo($string);
             }
         }
+    }
+    public function createUser(){
+        $user = new User;
+        $user->name = $this->name;
+        $user->email = $this->email;
+        $user->role = 1;
+        $user->password = Hash::make($this->password);
+        $user->save();
+        $user->assignRole($this->role);
+        $this->resetData();
+        $this->dispatchBrowserEvent('hideModal');
     }
 }

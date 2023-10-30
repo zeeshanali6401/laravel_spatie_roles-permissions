@@ -23,6 +23,6 @@ class HomeController extends Controller
 
     public function superAdmin()
     {
-        return view('managerHome');
+        return view('SuperAdmin');
     }
 }

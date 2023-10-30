@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\HomeController;
-use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
@@ -18,35 +17,26 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
-Route::view('/index', 'index');
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-
-
-
-
-
-
+// User Route
 Route::middleware(['auth', 'user-access:user'])->group(function () {
-
     Route::get('/user/home', [HomeController::class, 'index'])->name('home');
 });
 
-
+// Admin Route
 Route::middleware(['auth', 'user-access:admin'])->group(function () {
 
     Route::get('/admin/home', [HomeController::class, 'index'])->name('admin.home');
 });
 
-
+// Super Admin Route
 Route::middleware(['auth', 'user-access:superAdmin'])->group(function () {
-
-    // Route::get('/superAdmin/home', [HomeController::class, 'superAdmin'])->name('superAdmin.home');
-    Route::view('superAdmin/home', 'SuperAdmin');
+    Route::get('/superAdmin/home', [HomeController::class, 'superAdmin'])->name('superAdmin.home');
     Route::get('/role', [RoleController::class, 'index']);
     Route::post('/role', [RoleController::class, 'store'])->name('role.store');
     Route::view('/permission', 'permissions_form');
